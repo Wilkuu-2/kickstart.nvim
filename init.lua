@@ -282,7 +282,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -529,6 +529,7 @@ local on_attach = function(_, bufnr)
     vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
   end, '[C]ode [A]ction')
 
+  -- nmap('gd', vim.lsp.buf.definition, '[G]oto [Definiton]' )
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -564,6 +565,7 @@ require('which-key').register {
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+  ['<leader>z'] = { name = '[Z]k', _ = 'which_key_ignore' },
 }
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
@@ -592,6 +594,33 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  texlab = {
+    texlab = {
+      auxDirectory = "./latex_build",
+      bibtexFormatter = "texlab",
+      build = {
+        args = {"-X","compile","%f","--synctex","--keep-logs","--keep-intermediates", "--outdir", "./latex_build"},
+        executable = "/usr/bin/tectonic",
+        forwardSearchAfter = false,
+        onSave = true
+      },
+      chktex = {
+        onEdit = false,
+        onOpenAndSave = false
+      },
+      diagnosticsDelay = 300,
+      formatterLineLength = 80,
+      forwardSearch = {
+        executable = "zathura",
+        args = {"--synctex-forward","%l:1:%f","%p"},
+        onSave = true
+      },
+      latexFormatter = "latexindent",
+      latexindent = {
+        modifyLineBreaks = false
+      }
+    }
+  },
 
   lua_ls = {
     Lua = {
